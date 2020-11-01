@@ -36,3 +36,8 @@ android_from_shell.py
 
 	config_file (auto generated):
 		./.android_from_shell.cfg
+	
+	Example:
+		$ android_from_shell.py create -a test -p com.example.test
+		$ android_from_shell.py build
+		$ adb install app.apk
