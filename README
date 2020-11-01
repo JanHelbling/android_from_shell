@@ -18,8 +18,21 @@ android_from_shell.py
 
     A textbased tool 4 creating Android Apps:
     Why? Because Android-Studio freezes everytime, so i can't use it.
-    Usage:
-	first create the Files & Dirs:
-		android_from_shell.py create
-	then compile the APK:
-		android_from_shell.py build
+	
+	janhelbling@jans-Latitude-D630:~/Programming/android_from_shell$ ./bin/android_from_shell.py  --help
+	usage: android_from_shell.py [-h] [--package-name PNAME] [--app-name ANAME] create|build
+	
+	android_from_shell.py
+	
+	positional arguments:
+	  create|build
+	
+	optional arguments:
+	  -h, --help            show this help message and exit
+	  --package-name PNAME, -p PNAME
+	                        packagename, with three points '.' eg. com.example.hello
+	  --app-name ANAME, -a ANAME
+	                        appname, eg. Hello
+
+	config_file (auto generated):
+		./.android_from_shell.cfg

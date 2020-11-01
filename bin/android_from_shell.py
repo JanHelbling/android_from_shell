@@ -19,7 +19,7 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 
-import os,sys,argparse
+import os,sys,argparse,configparser
 
 BT	=	os.getenv('BUILD_TOOLS')
 PF	=	os.getenv('APLATFORM')
@@ -86,8 +86,8 @@ public class MainActivity extends Activity {
   android:versionCode="1"
   android:versionName="1.0" >
   <uses-sdk
-    android:minSdkVersion="29"
-    android:targetSdkVersion="29" />
+    android:minSdkVersion="28"
+    android:targetSdkVersion="28" />
   <application
     android:allowBackup="true"
     android:label="@string/app_name" >
@@ -131,12 +131,13 @@ class build:
 		print("Now Sign the APK!")
 		if not os.path.exists("../mykey.keystore"):
 			print("EXECUTE: keytool -genkeypair -validity 365 -keystore mykey.keystore -keyalg RSA -keysize 2048")
-			print("EXECUTE: {}/apksigner sign --ks mykey.keystore ./{}/bin/app.unaligned.apk".format(BT,NAME))
-			print("EXECUTE: {}/zipalign -f 4 ./{}/bin/app.unaligned.apk app.apk".format(BT,NAME))
+			print("EXECUTE: {}/zipalign -f 4 ./{}/bin/app.unaligned.apk ../app.apk".format(BT,NAME))
+			print("EXECUTE: {}/apksigner sign --ks mykey.keystore ../app.apk".format(BT,NAME))
 		else:
-			print("Enter keystore-password:")
-			os.system("{}/apksigner sign --ks ../mykey.keystore ./bin/app.unaligned.apk".format(BT))
 			self.zipalign_4()
+			print("Enter keystore-password:")
+			print(os.getcwd())
+			os.system("{}/apksigner sign --ks ../mykey.keystore ../app.apk".format(BT))
 			print("DONE! app.apk created!")
 	def aapt_1(self):
 		os.system('{}/aapt package -f -m -J ./src -M ./AndroidManifest.xml -S ./res -I {}/android.jar'.format(BT,PF))
@@ -157,7 +158,7 @@ class build:
 		os.system('{}/aapt add ./bin/app.unaligned.apk classes.dex'.format(BT))
 	
 	def zipalign_4(self):
-		os.system("{}/zipalign -f 4 ../{}/bin/app.unaligned.apk ../hello.apk".format(BT,NAME))
+		os.system("{}/zipalign -f 4 ../{}/bin/app.unaligned.apk ../app.apk".format(BT,NAME))
 
 if __name__ == '__main__':
 	parser = argparse.ArgumentParser(
@@ -168,13 +169,22 @@ if __name__ == '__main__':
 	)
 	parser.add_argument(
 		'--package-name','-p', default="com.example.hello", type=str,
-		help='packagename, eg. com.example.hello',dest='pname')
+		help='packagename, with three points \'.\' eg. com.example.hello',dest='pname')
 	parser.add_argument(
 		'--app-name','-a',default='Hello',type=str,
 		help='appname, eg. Hello',dest='aname')
 	args = parser.parse_args()
 	NAME		=	args.aname
 	PACKAGENAME	=	args.pname
+	config = configparser.ConfigParser()
+	if NAME + PACKAGENAME == 'Hellocom.example.hello' and os.path.exists('.android_from_shell.cfg'):
+		config.read('.android_from_shell.cfg')
+		NAME		= config['Application']['ANAME']
+		PACKAGENAME	= config['Application']['PNAME']
+	else:
+		config["Application"] = {'ANAME': NAME,'PNAME': PACKAGENAME}
+		with open('.android_from_shell.cfg', 'w') as configfile:
+			config.write(configfile)
 	print("NAME: ",NAME)
 	print("PNAME:",PACKAGENAME)
 	P1		=	PACKAGENAME.split(".")[0]
