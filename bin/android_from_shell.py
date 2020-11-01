@@ -19,7 +19,7 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 
-import os,sys
+import os,sys,argparse
 
 BT	=	os.getenv('BUILD_TOOLS')
 PF	=	os.getenv('APLATFORM')
@@ -160,11 +160,23 @@ class build:
 		os.system("{}/zipalign -f 4 ../{}/bin/app.unaligned.apk ../hello.apk".format(BT,NAME))
 
 if __name__ == '__main__':
-	if sys.argv.__len__() not in  [4,2]:
-		print("Usage: {} <create|build> NAME PACKAGENAME".format(sys.argv[0]))
-		exit(1)
-	NAME		=	sys.argv[2]
-	PACKAGENAME	=	sys.argv[3]
+	parser = argparse.ArgumentParser(
+		description='android_from_shell.py'
+	)
+	parser.add_argument(
+		'create|build'
+	)
+	parser.add_argument(
+		'--package-name','-p', default="com.example.hello", type=str,
+		help='packagename, eg. com.example.hello',dest='pname')
+	parser.add_argument(
+		'--app-name','-a',default='Hello',type=str,
+		help='appname, eg. Hello',dest='aname')
+	args = parser.parse_args()
+	NAME		=	args.aname
+	PACKAGENAME	=	args.pname
+	print("NAME: ",NAME)
+	print("PNAME:",PACKAGENAME)
 	P1		=	PACKAGENAME.split(".")[0]
 	P2		=	PACKAGENAME.split(".")[1]
 	P3		=	PACKAGENAME.split(".")[2]
