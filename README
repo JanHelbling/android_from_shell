@@ -30,7 +30,7 @@ android_from_shell.py
 	optional arguments:
 	  -h, --help            show this help message and exit
 	  --package-name PNAME, -p PNAME
-	                        packagename, with three points '.' eg. com.example.hello
+	                        packagename, with two points '.' eg. com.example.hello
 	  --app-name ANAME, -a ANAME
 	                        appname, eg. Hello
 

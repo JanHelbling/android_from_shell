@@ -169,7 +169,7 @@ if __name__ == '__main__':
 	)
 	parser.add_argument(
 		'--package-name','-p', default="com.example.hello", type=str,
-		help='packagename, with three points \'.\' eg. com.example.hello',dest='pname')
+		help='packagename, with two points \'.\' eg. com.example.hello',dest='pname')
 	parser.add_argument(
 		'--app-name','-a',default='Hello',type=str,
 		help='appname, eg. Hello',dest='aname')
