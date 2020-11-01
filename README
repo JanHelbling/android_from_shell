@@ -40,4 +40,24 @@ android_from_shell.py
 	Example:
 		$ android_from_shell.py create -a test -p com.example.test
 		$ android_from_shell.py build
+		NAME:  Test
+		PNAME: ch.jan.test
+		 'classes.dex'...
+		Now Sign the APK!
+		EXECUTE: keytool -genkeypair -validity 365 -keystore mykey.keystore -keyalg RSA -keysize 2048
+		EXECUTE: /home/janhelbling/snap/androidsdk/32/AndroidSDK/build-tools/29.0.0//zipalign -f 4 ./Test/bin/app.unaligned.apk ../app.apk
+		EXECUTE: /home/janhelbling/snap/androidsdk/32/AndroidSDK/build-tools/29.0.0//apksigner sign --ks mykey.keystore ../app.apk
+		$ keytool -genkeypair -validity 365 -keystore mykey.keystore -keyalg RSA -keysize 2048
+		$ /home/janhelbling/snap/androidsdk/32/AndroidSDK/build-tools/29.0.0//zipalign -f 4 ./Test/bin/app.unaligned.apk ../app.apk
+		$ /home/janhelbling/snap/androidsdk/32/AndroidSDK/build-tools/29.0.0//apksigner sign --ks mykey.keystore ../app.apk
+		$ adb install app.apk
+		$ android_from_shell.py build
+		NAME:  Test
+		PNAME: ch.jan.test
+		 'classes.dex'...
+		Now Sign the APK!
+		Enter keystore-password:
+		/home/janhelbling/Programming/android_from_shell/Test
+		Keystore password for signer #1: 
+		DONE! app.apk created!
 		$ adb install app.apk
