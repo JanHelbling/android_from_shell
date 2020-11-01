@@ -32,6 +32,11 @@ if PF == None:
 	print('Example: export APLATFORM=/opt/android-sdk/platforms/android-19/')
 	exit(1)
 
+NAME		=	"HelloAndroid"
+PACKAGENAME	=	"com.example.hello"
+P1		=	"com"
+P2		=	"example"
+P3		=	"hello"
 
 class create_files:
 	def __init__(self):
@@ -39,22 +44,21 @@ class create_files:
 		self.write_files()
 	
 	def create_folders(self):
-		os.mkdir('HelloAndroid')
-		os.mkdir('HelloAndroid/src/')
-		os.mkdir('HelloAndroid/src/com')
-		os.mkdir('HelloAndroid/src/com/example')
-		os.mkdir('HelloAndroid/src/com/example/helloandroid')
-		os.mkdir('HelloAndroid/obj')
-		os.mkdir('HelloAndroid/bin')
-		os.mkdir('HelloAndroid/res')
-		os.mkdir('HelloAndroid/res/layout')
-		os.mkdir('HelloAndroid/res/values')
-		os.mkdir('HelloAndroid/res/drawable')
+		os.mkdir('{}'.format(NAME))
+		os.mkdir('{}/src/'.format(NAME))
+		os.mkdir('{}/src/{}'.format(NAME,P1))
+		os.mkdir('{}/src/{}/{}'.format(NAME,P1,P2))
+		os.mkdir('{}/src/{}/{}/{}'.format(NAME,P1,P2,P3))
+		os.mkdir('{}/obj'.format(NAME))
+		os.mkdir('{}/bin'.format(NAME))
+		os.mkdir('{}/res'.format(NAME))
+		os.mkdir('{}/res/layout'.format(NAME))
+		os.mkdir('{}/res/values'.format(NAME))
+		os.mkdir('{}/res/drawable'.format(NAME))
 	
 	def write_files(self):
-		with open('HelloAndroid/src/com/example/helloandroid/MainActivity.java','w') as fd:
-			fd.write("""package com.example.helloandroid;
-
+		with open('{}/src/{}/{}/{}/MainActivity.java'.format(NAME,P1,P2,P3),'w') as fd:
+			fd.write("package "+P1+"."+P2+"."+P3+""";
 import android.app.Activity;
 import android.os.Bundle;
 
@@ -65,7 +69,7 @@ public class MainActivity extends Activity {
       setContentView(R.layout.activity_main);
    }
 }""")
-		with open('HelloAndroid/res/values/strings.xml','w') as fd:
+		with open('{}/res/values/strings.xml'.format(NAME),'w') as fd:
 			fd.write("""<resources>
    <string name="app_name">A Hello Android</string>
    <string name="hello_msg">Hello Android!</string>
@@ -73,12 +77,12 @@ public class MainActivity extends Activity {
    <string name="title_activity_main">MainActivity</string>
 </resources>""")
 		
-		with open('HelloAndroid/AndroidManifest.xml','w') as fd:
+		with open('{}/AndroidManifest.xml'.format(NAME),'w') as fd:
 			fd.write("""<?xml version="1.0" encoding="utf-8"?>
 <manifest
   xmlns:android=
     "http://schemas.android.com/apk/res/android"
-  package="com.example.helloandroid"
+  package="{}.{}.{}"
   android:versionCode="1"
   android:versionName="1.0" >
   <uses-sdk
@@ -99,9 +103,9 @@ public class MainActivity extends Activity {
       </intent-filter>
     </activity>
   </application>
-</manifest>""")
+</manifest>""".format(P1,P2,P3))
 		
-		with open('HelloAndroid/res/layout/activity_main.xml','w') as fd:
+		with open('{}/res/layout/activity_main.xml'.format(NAME),'w') as fd:
 			fd.write("""<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android" xmlns:tools="http://schemas.android.com/tools"
    android:layout_width="match_parent"
    android:layout_height="match_parent" >
@@ -117,7 +121,7 @@ public class MainActivity extends Activity {
 
 class build:
 	def __init__(self):
-		os.chdir("HelloAndroid")
+		os.chdir("{}".format(NAME))
 		self.aapt_1()
 		self.javac()
 		self.dx()
@@ -127,21 +131,21 @@ class build:
 		print("Now Sign the APK!")
 		if not os.path.exists("../mykey.keystore"):
 			print("EXECUTE: keytool -genkeypair -validity 365 -keystore mykey.keystore -keyalg RSA -keysize 2048")
-			print("EXECUTE: {}/apksigner sign --ks mykey.keystore ./HelloAndroid/bin/hello.unaligned.apk".format(BT))
-			print("EXECUTE: {}/zipalign -f 4 ./HelloAndroid/bin/hello.unaligned.apk hello.apk".format(BT))
+			print("EXECUTE: {}/apksigner sign --ks mykey.keystore ./{}/bin/app.unaligned.apk".format(BT,NAME))
+			print("EXECUTE: {}/zipalign -f 4 ./{}/bin/app.unaligned.apk app.apk".format(BT,NAME))
 		else:
 			print("Enter keystore-password:")
-			os.system("{}/apksigner sign --ks ../mykey.keystore ./bin/hello.unaligned.apk".format(BT))
+			os.system("{}/apksigner sign --ks ../mykey.keystore ./bin/app.unaligned.apk".format(BT))
 			self.zipalign_4()
-			print("DONE! hello.apk created!")
+			print("DONE! app.apk created!")
 	def aapt_1(self):
 		os.system('{}/aapt package -f -m -J ./src -M ./AndroidManifest.xml -S ./res -I {}/android.jar'.format(BT,PF))
 	
 	def aapt_2(self):
-		os.system('{}/aapt package -f -m -F ./bin/hello.unaligned.apk -M ./AndroidManifest.xml -S ./res -I {}/android.jar'.format(BT,PF))
+		os.system('{}/aapt package -f -m -F ./bin/app.unaligned.apk -M ./AndroidManifest.xml -S ./res -I {}/android.jar'.format(BT,PF))
 	
 	def javac(self):
-		os.system('javac -d obj -classpath src -bootclasspath {}/android.jar src/com/example/helloandroid/*.java'.format(PF))
+		os.system('javac -d obj -classpath src -bootclasspath {}/android.jar src/{}/{}/{}/*.java'.format(PF,P1,P2,P3))
 	
 	def dx(self):
 		os.system('{}/dx --dex --output=./bin/classes.dex ./obj'.format(BT))
@@ -150,15 +154,20 @@ class build:
 		os.system('cp ./bin/classes.dex .')
 	
 	def aapt_3(self):
-		os.system('{}/aapt add ./bin/hello.unaligned.apk classes.dex'.format(BT))
+		os.system('{}/aapt add ./bin/app.unaligned.apk classes.dex'.format(BT))
 	
 	def zipalign_4(self):
-		os.system("{}/zipalign -f 4 ../HelloAndroid/bin/hello.unaligned.apk ../hello.apk".format(BT))
+		os.system("{}/zipalign -f 4 ../{}/bin/app.unaligned.apk ../hello.apk".format(BT,NAME))
 
 if __name__ == '__main__':
-	if sys.argv.__len__() == 1:
-		print("Usage: {} [create|build]".format(sys.argv[0]))
+	if sys.argv.__len__() not in  [4,2]:
+		print("Usage: {} <create|build> NAME PACKAGENAME".format(sys.argv[0]))
 		exit(1)
+	NAME		=	sys.argv[2]
+	PACKAGENAME	=	sys.argv[3]
+	P1		=	PACKAGENAME.split(".")[0]
+	P2		=	PACKAGENAME.split(".")[1]
+	P3		=	PACKAGENAME.split(".")[2]
 	if 'create' == sys.argv[1]:
 		a = create_files()
 	elif 'build' == sys.argv[1]:

@@ -4,7 +4,7 @@
 from distutils.core import setup
 
 setup(name='android_from_shell.py',
-      version='0.0.2',
+      version='0.0.3',
       description='Create AndroidApps from SHELL without GUI.',
       license='GPL3+',
       author='Jan Helbling',
