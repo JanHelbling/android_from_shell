@@ -38,7 +38,7 @@ android_from_shell.py
 		./.android_from_shell.cfg
 	
 	Example:
-		$ android_from_shell.py create -a test -p com.example.test
+		$ android_from_shell.py create -a Test -p ch.jan.test
 		$ android_from_shell.py build
 		NAME:  Test
 		PNAME: ch.jan.test
