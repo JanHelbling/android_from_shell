@@ -50,6 +50,7 @@ class create_files:
 		os.mkdir('{}/src/{}/{}'.format(NAME,P1,P2))
 		os.mkdir('{}/src/{}/{}/{}'.format(NAME,P1,P2,P3))
 		os.mkdir('{}/obj'.format(NAME))
+		os.mkdir('{}/lib'.format(NAME))
 		os.mkdir('{}/bin'.format(NAME))
 		os.mkdir('{}/res'.format(NAME))
 		os.mkdir('{}/res/layout'.format(NAME))
@@ -149,7 +150,7 @@ class build:
 		os.system('javac -d obj -classpath src -bootclasspath {}/android.jar src/{}/{}/{}/*.java'.format(PF,P1,P2,P3))
 	
 	def dx(self):
-		os.system('{}/dx --dex --output=./bin/classes.dex ./obj'.format(BT))
+		os.system('{}/dx --dex --output=./bin/classes.dex ./obj ./lib'.format(BT))
 	
 	def cp(self):
 		os.system('cp ./bin/classes.dex .')
