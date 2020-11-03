@@ -133,7 +133,7 @@ class build:
 		if not os.path.exists("../mykey.keystore"):
 			print("EXECUTE: keytool -genkeypair -validity 365 -keystore mykey.keystore -keyalg RSA -keysize 2048")
 			print("EXECUTE: {}/zipalign -f 4 ./{}/bin/app.unaligned.apk app.apk".format(BT,NAME))
-			print("EXECUTE: {}/apksigner sign --ks mykey.keystore app.apk".format(BT,NAME))
+			print("EXECUTE: {}/apksigner sign --ks mykey.keystore app.apk".format(BT))
 		else:
 			self.zipalign_4()
 			print("Enter keystore-password:")
