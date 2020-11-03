@@ -44,7 +44,7 @@ class create_files:
 		self.write_files()
 	
 	def create_folders(self):
-		os.mkdir('{}'.format(NAME))g
+		os.mkdir('{}'.format(NAME))
 		os.mkdir('{}/src/'.format(NAME))
 		os.mkdir('{}/src/{}'.format(NAME,P1))
 		os.mkdir('{}/src/{}/{}'.format(NAME,P1,P2))
