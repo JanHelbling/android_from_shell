@@ -60,8 +60,8 @@ class create_files:
 	def write_files(self):
 		with open('{}/src/{}/{}/{}/MainActivity.java'.format(NAME,P1,P2,P3),'w') as fd:
 			fd.write("package "+P1+"."+P2+"."+P3+""";
-import android.app.Activity;
-import android.os.Bundle;
+import android.app.*;
+import android.os.*;
 
 public class MainActivity extends Activity {
    @Override
@@ -127,7 +127,6 @@ class build:
 		self.javac()
 		self.dx()
 		self.aapt_2()
-		self.cp()
 		self.aapt_3()
 		print("Now Sign the APK!")
 		if not os.path.exists("../mykey.keystore"):
@@ -147,13 +146,10 @@ class build:
 		os.system('{}/aapt package -f -m -F ./bin/app.unaligned.apk -M ./AndroidManifest.xml -S ./res -I {}/android.jar'.format(BT,PF))
 	
 	def javac(self):
-		os.system('javac -d obj -classpath src -bootclasspath {}/android.jar src/{}/{}/{}/*.java'.format(PF,P1,P2,P3))
+		os.system('javac -d obj -classpath "{}/android.jar" src/{}/{}/{}/*.java'.format(PF,P1,P2,P3))
 	
 	def dx(self):
-		os.system('{}/dx --dex --output=./bin/classes.dex ./obj ./lib'.format(BT))
-	
-	def cp(self):
-		os.system('cp ./bin/classes.dex .')
+		os.system('{}/d8 ./obj/{}/{}/{}/*'.format(BT,P1,P2,P3))
 	
 	def aapt_3(self):
 		os.system('{}/aapt add ./bin/app.unaligned.apk classes.dex'.format(BT))
